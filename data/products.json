@@ -1,0 +1,282 @@
+[
+  {
+    "id": "vizu-clear",
+    "line": "VIZU",
+    "name": "VIZU Clear",
+    "sku": "VIZU-CLEAR",
+    "note": "0% Tint · Game-Legal",
+    "description": "Clear, stadium-ready visibility for the core assortment.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/IMG_3061-Transparent.png?v=1755166530",
+    "price": "549"
+  },
+  {
+    "id": "vizu-clear-photochromic",
+    "line": "VIZU",
+    "name": "VIZU Clear Photochromic",
+    "sku": "VIZU-PHOTOCHROMIC",
+    "note": "Adaptive Tint · Day-to-Night",
+    "description": "Adaptive lens option for changing light through the day.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/IMG_3061-Transparent_8dbebbef-f4fd-4e35-84e5-f6e7438ea289.png?v=1755166494",
+    "price": "699"
+  },
+  {
+    "id": "vizu-nordic-sky",
+    "line": "VIZU",
+    "name": "VIZU Nordic Sky",
+    "sku": "VIZU-NS",
+    "note": "Clear Base · Blue Accent",
+    "description": "Clear shield with a cool blue accent for team-color storytelling.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/mmexport1705065007352-Transparent.png?v=1755166593",
+    "price": "549"
+  },
+  {
+    "id": "vizu-clear-purple-rain",
+    "line": "VIZU",
+    "name": "VIZU Clear Purple Rain",
+    "sku": "VIZU-CPR",
+    "note": "Clear Base · Purple Accent",
+    "description": "Collector-friendly accent finish with a vivid purple edge.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/UntitledProject_11_eeeab9bb-5877-49ad-9a8c-8fc74ad958f4.png?v=1755109847",
+    "price": "549"
+  },
+  {
+    "id": "vizu-clear-inferno",
+    "line": "VIZU",
+    "name": "VIZU Clear Inferno",
+    "sku": "VIZU-CI",
+    "note": "Clear Base · Red Accent",
+    "description": "Warm red accent option for bold team-led stories.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/IMG_3060-e-trasparent_a57991f0-dbdc-4b61-abc5-780223e1792d.png?v=1755166606",
+    "price": "549"
+  },
+  {
+    "id": "vizu-chrome-mirror",
+    "line": "VIZU",
+    "name": "VIZU Chrome Mirror",
+    "sku": "VIZU-CHROME",
+    "note": "Mirror Finish · Silver",
+    "description": "High-shine silver finish that reads instantly premium on shelf.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/IMG-3062-Transparent-2-front-view.png?v=1755166657",
+    "price": "649"
+  },
+  {
+    "id": "vizu-gold-rush",
+    "line": "VIZU",
+    "name": "VIZU Gold Rush",
+    "sku": "VIZU-GR",
+    "note": "Mirror Finish · Gold",
+    "description": "Warm gold mirror built for top-tier merchandising.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/UntitledProject_23.png?v=1736534466",
+    "price": "649"
+  },
+  {
+    "id": "vizu-emerald-gold",
+    "line": "VIZU",
+    "name": "VIZU Emerald Gold",
+    "sku": "VIZU-EG",
+    "note": "Dual-Tone Mirror · Gold/Green",
+    "description": "Two-tone mirror for players looking for a rarer finish profile.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/UntitledProject_24.png?v=1736534501",
+    "price": "649"
+  },
+  {
+    "id": "vizu-aurora",
+    "line": "VIZU",
+    "name": "VIZU Aurora",
+    "sku": "VIZU-AURORA",
+    "note": "Mirror Finish · Green",
+    "description": "Fresh green mirror finish with a new-season feel.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/UntitledProject_12_4c073e94-92e0-4090-a2b6-bcc76182815e.png?v=1752247835",
+    "price": "649"
+  },
+  {
+    "id": "vizu-deep-ocean-blue",
+    "line": "VIZU",
+    "name": "VIZU Deep Ocean Blue",
+    "sku": "VIZU-DOP",
+    "note": "Mirror Finish · Dark Blue",
+    "description": "Deep blue mirror for darker, colder visual attitude.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/UntitledProject_13_e8ee49d4-291f-43f2-9284-f9ff10ca9c7e.png?v=1755109562",
+    "price": "649"
+  },
+  {
+    "id": "vizu-inferno",
+    "line": "VIZU",
+    "name": "VIZU Inferno",
+    "sku": "VIZU-INFERNO",
+    "note": "Tinted Finish · Red",
+    "description": "Full red tint that gives the line its most aggressive colour hit.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/IMG_3064-Transparent.png?v=1755166536",
+    "price": "599"
+  },
+  {
+    "id": "vizu-smoke",
+    "line": "VIZU",
+    "name": "VIZU Smoke",
+    "sku": "VIZU-SMOKE",
+    "note": "20% Tint · Light Smoke",
+    "description": "Light smoke option for subtle contrast and calmer styling.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/New-visor-smoke-BlackBG.png?v=1738314378",
+    "price": "599"
+  },
+  {
+    "id": "vizu-midnight-black",
+    "line": "VIZU",
+    "name": "VIZU Midnight Black",
+    "sku": "VIZU-MB",
+    "note": "80% Tint · Dark Smoke",
+    "description": "Blackout hero piece for the darkest premium visual look.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/IMG_3063-Transparent.png?v=1755166627",
+    "price": "599"
+  },
+  {
+    "id": "vision-clear",
+    "line": "VISION",
+    "name": "VISION Clear",
+    "sku": "VISION-CLEAR",
+    "note": "0% Tint · Game-Legal",
+    "description": "The universal clear shield that belongs in every starter assortment.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/Clear-TransparentBG.png?v=1755165856",
+    "price": "399"
+  },
+  {
+    "id": "vision-clear-mirror",
+    "line": "VISION",
+    "name": "VISION Clear Mirror",
+    "sku": "VISION-CLEAR-MIRROR",
+    "note": "Clear Mirror · Universal Fit",
+    "description": "Subtle reflective finish for players who want shine without a dark lens.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/ClearMirror-TransparentBG.png?v=1755166110",
+    "price": "449"
+  },
+  {
+    "id": "vision-nordic-sky",
+    "line": "VISION",
+    "name": "VISION Nordic Sky",
+    "sku": "VISION-NS",
+    "note": "Clear Base · Blue Accent",
+    "description": "Clear shield with cool blue detailing for team-color assortments.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/Nordicsky-TransparentBG.png?v=1755165868",
+    "price": "399"
+  },
+  {
+    "id": "vision-rose-gold",
+    "line": "VISION",
+    "name": "VISION Rose Gold",
+    "sku": "VISION-RG",
+    "note": "Mirror Finish · Rose Gold",
+    "description": "Warm rose mirror that softens the premium story without losing impact.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/RoseGold-TransparentBG.png?v=1755165884",
+    "price": "499"
+  },
+  {
+    "id": "vision-gold-rush",
+    "line": "VISION",
+    "name": "VISION Gold Rush",
+    "sku": "VISION-GR",
+    "note": "Mirror Finish · Gold",
+    "description": "Commercial gold mirror for instant display energy.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/Goldrush-TransparentBG.png?v=1755165869",
+    "price": "499"
+  },
+  {
+    "id": "vision-emerald-gold",
+    "line": "VISION",
+    "name": "VISION Emerald Gold",
+    "sku": "VISION-EG",
+    "note": "Dual-Tone Mirror · Gold/Green",
+    "description": "Two-tone mirror finish for a more unexpected premium choice.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/emeraldgold-TransparentBG.png?v=1755165896",
+    "price": "499"
+  },
+  {
+    "id": "vision-deep-ocean-blue",
+    "line": "VISION",
+    "name": "VISION Deep Ocean Blue",
+    "sku": "VISION-DOB",
+    "note": "Mirror Finish · Dark Blue",
+    "description": "Dark blue mirror that broadens the range without pushing into blackout territory.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/DOB-TransparentBG.png?v=1755165889",
+    "price": "499"
+  },
+  {
+    "id": "vision-chrome-mirror",
+    "line": "VISION",
+    "name": "VISION Chrome Mirror",
+    "sku": "VISION-CHROME",
+    "note": "Mirror Finish · Silver",
+    "description": "Silver mirror finish with easy compatibility and broad customer appeal.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/chromemirror-TransparentBG.png?v=1755165877",
+    "price": "499"
+  },
+  {
+    "id": "vision-amber",
+    "line": "VISION",
+    "name": "VISION Amber",
+    "sku": "VISION-AMBER",
+    "note": "Amber Tint · Low-Light",
+    "description": "Low-light friendly tint for changing conditions and utility-driven players.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/AMBER-TransparentBG.png?v=1755166096",
+    "price": "449"
+  },
+  {
+    "id": "vision-smoke",
+    "line": "VISION",
+    "name": "VISION Smoke",
+    "sku": "VISION-SMOKE",
+    "note": "20% Tint · Light Smoke",
+    "description": "Light smoke option for a subtle darker lens.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/Smoke-TransparentBG.png?v=1755166121",
+    "price": "449"
+  },
+  {
+    "id": "vision-midnight-black",
+    "line": "VISION",
+    "name": "VISION Midnight Black",
+    "sku": "VISION-MB",
+    "note": "80% Tint · Dark Smoke",
+    "description": "Blackout option for the darkest universal-fit finish.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/Midnightblack-TransparentBG.png?v=1755165903",
+    "price": "449"
+  },
+  {
+    "id": "revo-inferno",
+    "line": "REVO",
+    "name": "REVO Inferno",
+    "sku": "REVO-INFERNO",
+    "note": "Revo™ Mirror · Red-to-Gold",
+    "description": "Fiery red-to-gold mirror powered by Revo™ contrast-enhancing optics.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/Inferno-TransparentBG.png?v=1755165909",
+    "price": "549"
+  },
+  {
+    "id": "revo-aurora",
+    "line": "REVO",
+    "name": "REVO Aurora",
+    "sku": "REVO-AURORA",
+    "note": "Revo™ Iridescent · Green-to-Violet",
+    "description": "Northern Lights inspired iridescent shift with elite Revo™ clarity.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/Revoaurora-TransparentBG.png?v=1755165922",
+    "price": "549"
+  },
+  {
+    "id": "revo-bifrost",
+    "line": "REVO",
+    "name": "REVO Bifrost",
+    "sku": "REVO-BIFROST",
+    "note": "Revo™ Wraparound · 20% Blue Tint",
+    "description": "Panoramic blue lens built for bright light and razor-sharp contrast.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/BIFROST-TransparentBG.png?v=1755166127",
+    "price": "549"
+  },
+  {
+    "id": "revo-texas-sun",
+    "line": "REVO",
+    "name": "REVO Texas Sun",
+    "sku": "REVO-TEXAS",
+    "note": "Revo™ Wraparound · 20% Yellow/Gold",
+    "description": "Bright-light specialist — warm tint that cuts glare and pops detail.",
+    "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/Texassun-TransparentBG.png?v=1755166137",
+    "price": "549"
+  }
+]
