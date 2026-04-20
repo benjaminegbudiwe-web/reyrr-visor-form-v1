@@ -17,13 +17,41 @@ export type AdminRow = {
 const NO_TEAM_KEY = '(no team)';
 
 export default function AdminTable({
-  rows,
+  rows: initialRows,
   exportKey,
 }: {
   rows: AdminRow[];
   exportKey: string;
 }) {
   const [q, setQ] = useState('');
+  const [rows, setRows] = useState<AdminRow[]>(initialRows);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+
+  const handleDelete = async (row: AdminRow) => {
+    if (deletingId !== null) return;
+    const label = `${row.name}${row.team ? ` (${row.team})` : ''}`;
+    const ok = window.confirm(
+      `Delete request from ${label}?\n\nThis cannot be undone.`
+    );
+    if (!ok) return;
+
+    setDeletingId(row.id);
+    try {
+      const res = await fetch(
+        `/api/submissions/${row.id}?key=${encodeURIComponent(exportKey)}`,
+        { method: 'DELETE' }
+      );
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || `Delete failed (${res.status})`);
+      }
+      setRows((prev) => prev.filter((r) => r.id !== row.id));
+    } catch (e: any) {
+      window.alert(e?.message || 'Could not delete that request.');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -98,6 +126,7 @@ export default function AdminTable({
                 <th>Line</th>
                 <th>Visor</th>
                 <th>Email</th>
+                <th aria-label="Actions" />
               </tr>
             </thead>
             <tbody>
@@ -106,6 +135,8 @@ export default function AdminTable({
                   key={teamName}
                   teamName={teamName}
                   teamRows={teamRows}
+                  onDelete={handleDelete}
+                  deletingId={deletingId}
                 />
               ))}
             </tbody>
@@ -119,31 +150,50 @@ export default function AdminTable({
 function TeamGroup({
   teamName,
   teamRows,
+  onDelete,
+  deletingId,
 }: {
   teamName: string;
   teamRows: AdminRow[];
+  onDelete: (row: AdminRow) => void;
+  deletingId: number | null;
 }) {
   return (
     <>
       <tr className="team-row">
-        <td colSpan={7}>
+        <td colSpan={8}>
           {teamName}
           <span className="cnt">
             {teamRows.length} request{teamRows.length === 1 ? '' : 's'}
           </span>
         </td>
       </tr>
-      {teamRows.map((r) => (
-        <tr key={r.id}>
-          <td>{r.submittedAt}</td>
-          <td>{r.jersey || '—'}</td>
-          <td>{r.name}</td>
-          <td>{r.helmet || '—'}</td>
-          <td>{r.line || '—'}</td>
-          <td>{r.visorName}</td>
-          <td>{r.email || '—'}</td>
-        </tr>
-      ))}
+      {teamRows.map((r) => {
+        const isDeleting = deletingId === r.id;
+        return (
+          <tr key={r.id} style={{ opacity: isDeleting ? 0.4 : 1 }}>
+            <td>{r.submittedAt}</td>
+            <td>{r.jersey || '—'}</td>
+            <td>{r.name}</td>
+            <td>{r.helmet || '—'}</td>
+            <td>{r.line || '—'}</td>
+            <td>{r.visorName}</td>
+            <td>{r.email || '—'}</td>
+            <td className="row-actions">
+              <button
+                type="button"
+                className="row-delete"
+                title="Delete request"
+                aria-label={`Delete request from ${r.name}`}
+                onClick={() => onDelete(r)}
+                disabled={isDeleting || deletingId !== null}
+              >
+                {isDeleting ? '…' : '✕'}
+              </button>
+            </td>
+          </tr>
+        );
+      })}
     </>
   );
 }

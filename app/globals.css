@@ -755,6 +755,32 @@ body {
   text-transform: uppercase;
   margin-left: 10px;
 }
+.admin-table td.row-actions {
+  width: 1%;
+  white-space: nowrap;
+  padding: 6px 10px;
+  text-align: right;
+}
+.row-delete {
+  font-family: var(--f-hud);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  background: transparent;
+  color: var(--ink-3);
+  border: 1px solid var(--line-2);
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: color 150ms ease, border-color 150ms ease, background 150ms ease;
+}
+.row-delete:hover:not(:disabled) {
+  color: #fff;
+  background: #c0392b;
+  border-color: #c0392b;
+}
+.row-delete:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 .admin-empty {
   padding: 60px 20px;
   text-align: center;

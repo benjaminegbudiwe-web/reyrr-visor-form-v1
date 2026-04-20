@@ -109,3 +109,20 @@ export async function listSubmissions(): Promise<Submission[]> {
   }
   return readLocal();
 }
+
+export async function deleteSubmission(id: number): Promise<boolean> {
+  if (!Number.isFinite(id) || id <= 0) return false;
+  if (hasNeon()) {
+    await ensureSchema();
+    const sql = neon(process.env.DATABASE_URL!);
+    const rows = (await sql`
+      DELETE FROM submissions WHERE id = ${id} RETURNING id
+    `) as { id: number }[];
+    return rows.length > 0;
+  }
+  const rows = readLocal();
+  const next = rows.filter((r) => r.id !== id);
+  if (next.length === rows.length) return false;
+  writeLocal(next);
+  return true;
+}
