@@ -144,14 +144,7 @@ export default function StepIdentify({
             />
           </div>
 
-          <div
-            className="field"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: 24,
-            }}
-          >
+          <div className="field field-row-2">
             <div>
               <label htmlFor="jersey-number" className="field-label">
                 Jersey # <span style={{ opacity: 0.5 }}>(optional)</span>

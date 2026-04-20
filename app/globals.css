@@ -234,6 +234,7 @@ body {
   .hero { padding: 96px 20px 40px; }
   .hero-meta { grid-template-columns: repeat(2, 1fr); gap: 20px; }
 }
+
 .stage-left {
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -556,6 +557,10 @@ body {
 
 .fields-stack { display: grid; gap: 24px; }
 .field { position: relative; }
+.field-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 560px) {
+  .field-row-2 { grid-template-columns: 1fr; gap: 20px; }
+}
 .field-label {
   font-family: var(--f-hud); font-size: 11px; letter-spacing: 0.22em;
   color: var(--ink-3); text-transform: uppercase;
@@ -790,4 +795,73 @@ body {
   letter-spacing: 0.16em;
   text-transform: uppercase;
   border: 1px dashed var(--line);
+}
+
+/* =========================================================
+   Phone overrides — kept at the end so the cascade wins
+   ========================================================= */
+@keyframes heroNudge {
+  0%, 100% { transform: translateY(0); opacity: 0.55; }
+  50%      { transform: translateY(4px); opacity: 1; }
+}
+
+@media (max-width: 720px) {
+  .chrome { padding: 12px 16px; }
+  .chrome-mid { gap: 10px; }
+  .chrome-right { gap: 10px; }
+
+  /* Hero becomes a full-viewport landing. Stage sits just below the fold. */
+  .hero { padding: 0 18px 32px; gap: 32px; }
+  .hero-header {
+    grid-template-columns: 1fr;
+    align-content: center;
+    justify-items: start;
+    gap: 24px;
+    min-height: 100svh;
+    min-height: 100vh; /* fallback */
+    padding: 96px 0 64px;
+    border-bottom: none;
+    position: relative;
+  }
+  .hero-title {
+    font-size: clamp(64px, 17vw, 120px);
+    line-height: 0.92;
+    letter-spacing: -0.025em;
+  }
+  .hero-sub {
+    font-size: 15px;
+    max-width: 32ch;
+    line-height: 1.5;
+  }
+  .hero-meta {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    align-items: start;
+    width: 100%;
+    padding-top: 22px;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+  }
+  .meta-stat .v { font-size: 20px; }
+  .meta-stat .k { font-size: 9px; letter-spacing: 0.16em; }
+
+  /* Scroll cue pinned to bottom of the full-screen hero */
+  .hero-header::after {
+    content: "↓  BROWSE FINISHES";
+    position: absolute;
+    left: 0; right: 0; bottom: 18px;
+    text-align: center;
+    font-family: var(--f-hud);
+    font-size: 10px; letter-spacing: 0.26em;
+    color: var(--ink-3);
+    animation: heroNudge 2.4s ease-in-out infinite;
+  }
+
+  .stage-left { min-height: 380px; }
+  .stage-hud-bottom {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 16px;
+  }
+  .stage-hud-bottom .sv { font-size: 12px; }
+
+  .detail-card { padding: 20px 18px 22px; }
 }
