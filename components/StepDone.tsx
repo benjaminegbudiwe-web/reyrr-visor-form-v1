@@ -14,13 +14,12 @@ type Visor = {
 export default function StepDone({
   requestId,
   playerName,
-  teamName,
   visor,
   onReset,
 }: {
   requestId: string;
   playerName: string;
-  teamName: string;
+  teamName?: string;
   visor: Visor;
   onReset: () => void;
 }) {
@@ -55,16 +54,6 @@ export default function StepDone({
           request ID in case you need to reference it.
         </motion.p>
 
-        <div className="step2-stats">
-          <div className="detail-card">
-            <div className="detail-line">Team</div>
-            <div className="detail-name">{teamName}</div>
-          </div>
-          <div className="detail-card">
-            <div className="detail-line">Request</div>
-            <div className="detail-name mono">{requestId}</div>
-          </div>
-        </div>
       </div>
 
       <div className="step2-right">
