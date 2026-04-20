@@ -1,40 +1,82 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import products from '@/data/products.json';
+import allProducts from '@/data/products.json';
+import Chrome from '@/components/Chrome';
+
+// All products render. `soldOut: true` in products.json disables selection
+// (greyed out + X overlay) but keeps the card visible so players can see
+// the full line. Server-side VALID_IDS still blocks forged submissions.
+const products = allProducts;
 import Hero from '@/components/Hero';
 import StepCatalog from '@/components/StepCatalog';
-import StepName from '@/components/StepName';
+import StepIdentify, { IdentifyFields } from '@/components/StepIdentify';
 import StepDone from '@/components/StepDone';
+import Ticker from '@/components/Ticker';
 
 type Visor = (typeof products)[number];
-type Step = 'catalog' | 'name' | 'done';
+type Step = 'catalog' | 'identify' | 'done';
 
 const LINE_ORDER = ['VIZU', 'VISION', 'REVO'];
+
+const EMPTY_FIELDS: IdentifyFields = {
+  teamName: '',
+  playerName: '',
+  jerseyNumber: '',
+  helmetModel: '',
+};
+
+function makeRequestId(): string {
+  // RYR-XXXXXX — 6 alphanumeric
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s = '';
+  for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return `RYR-${s}`;
+}
 
 export default function Home() {
   const [step, setStep] = useState<Step>('catalog');
   const [selectedVisor, setSelectedVisor] = useState<Visor | null>(null);
-  const [name, setName] = useState('');
+  const [fields, setFields] = useState<IdentifyFields>(EMPTY_FIELDS);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [requestId, setRequestId] = useState<string>('');
+  const pickerRef = useRef<HTMLDivElement | null>(null);
 
-  const progressPercent = step === 'catalog' ? 50 : step === 'name' ? 85 : 100;
-  const progressLabel =
-    step === 'done' ? 'Complete' : `Step ${step === 'catalog' ? 1 : 2} of 2`;
+  const chromeStep: 1 | 2 | 3 =
+    step === 'catalog' ? 1 : step === 'identify' ? 2 : 3;
 
-  const handlePickVisor = (visor: Visor) => {
-    setSelectedVisor(visor);
-    setStep('name');
-    // Scroll to top so the hero + form are visible
-    requestAnimationFrame(() =>
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    );
+  const patchFields = useCallback((patch: Partial<IdentifyFields>) => {
+    setFields((prev) => ({ ...prev, ...patch }));
+  }, []);
+
+  const handlePickVisor = (v: Visor) => {
+    setSelectedVisor(v);
+    // Scroll to the stage so the selected visor + detail card + CTA land
+    // in view. Offset ~140px above the stage top so you see a bit of the
+    // LOCK IN. headline + breathing room, not a hard cut to the frame.
+    const stage = document.getElementById('stage');
+    if (stage) {
+      const top = stage.getBoundingClientRect().top + window.scrollY - 120;
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const advanceToIdentify = () => {
+    if (!selectedVisor) {
+      // Scroll to the picker instead
+      pickerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+    setStep('identify');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSubmit = async () => {
-    if (!selectedVisor || !name.trim()) return;
+    if (!selectedVisor) return;
     setSubmitting(true);
     setError(null);
     try {
@@ -42,16 +84,21 @@ export default function Home() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: name.trim(),
+          name: fields.playerName.trim(),
           visor: selectedVisor.id,
           line: selectedVisor.line,
+          team_name: fields.teamName.trim(),
+          jersey_number: fields.jerseyNumber.trim(),
+          helmet_model: fields.helmetModel,
         }),
       });
       const result = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(result.error || 'Submission failed');
+      setRequestId(makeRequestId());
       setStep('done');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (e: any) {
-      setError(e.message || 'Something went wrong.');
+      setError(e?.message || 'Something went wrong.');
     } finally {
       setSubmitting(false);
     }
@@ -59,84 +106,87 @@ export default function Home() {
 
   const handleReset = () => {
     setSelectedVisor(null);
-    setName('');
+    setFields(EMPTY_FIELDS);
     setError(null);
+    setRequestId('');
     setStep('catalog');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const showVisorInHero =
-    (step === 'name' || step === 'done') && !!selectedVisor;
+  const totalVisors = useMemo(() => products.length, []);
 
   return (
     <main>
-      <Hero
-        state={{
-          step,
-          selectedLine: selectedVisor?.line ?? null,
-          selectedVisor:
-            showVisorInHero && selectedVisor
-              ? {
-                  name: selectedVisor.name,
-                  image: selectedVisor.image,
-                  note: selectedVisor.note,
-                }
-              : null,
-        }}
-      />
+      <Chrome step={chromeStep} />
 
-      <div className="form-shell">
-        <header className="form-shell__header">
-          <div>
-            <p className="eyebrow">Player intake</p>
-            <h2>Visor request</h2>
-          </div>
-          <div className="progress">
-            <span className="progress__label">{progressLabel}</span>
-            <div className="progress__track" aria-hidden="true">
-              <motion.span
-                className="progress__fill"
-                initial={false}
-                animate={{ width: `${progressPercent}%` }}
-                transition={{ duration: 0.35 }}
-                style={{ display: 'block', height: '100%' }}
-              />
-            </div>
-          </div>
-        </header>
-
-        <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait">
+        {step === 'catalog' && (
           <motion.div
-            key={step}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
+            key="catalog"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
           >
-            {step === 'catalog' && (
+            <Hero
+              step={1}
+              selectedVisor={selectedVisor}
+              totalVisors={totalVisors}
+              onCTA={advanceToIdentify}
+              ctaDisabled={!selectedVisor}
+            />
+            <Ticker />
+            <div ref={pickerRef}>
               <StepCatalog
                 visors={products}
                 lines={LINE_ORDER}
+                selectedId={selectedVisor?.id ?? null}
                 onPick={handlePickVisor}
               />
-            )}
-            {step === 'name' && selectedVisor && (
-              <StepName
-                value={name}
-                visor={selectedVisor}
-                onChange={setName}
-                onBack={() => setStep('catalog')}
-                onSubmit={handleSubmit}
-                submitting={submitting}
-                error={error}
-              />
-            )}
-            {step === 'done' && selectedVisor && (
-              <StepDone name={name} visor={selectedVisor} onReset={handleReset} />
-            )}
+            </div>
           </motion.div>
-        </AnimatePresence>
-      </div>
+        )}
+
+        {step === 'identify' && selectedVisor && (
+          <motion.div
+            key="identify"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+          >
+            <StepIdentify
+              visor={selectedVisor}
+              fields={fields}
+              onChange={patchFields}
+              onBack={() => setStep('catalog')}
+              onSubmit={handleSubmit}
+              submitting={submitting}
+              error={error}
+            />
+            <Ticker />
+          </motion.div>
+        )}
+
+        {step === 'done' && selectedVisor && (
+          <motion.div
+            key="done"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+          >
+            <StepDone
+              requestId={requestId}
+              playerName={fields.playerName}
+              teamName={fields.teamName}
+              visor={selectedVisor}
+              onReset={handleReset}
+            />
+            <Ticker />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }

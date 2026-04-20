@@ -1,150 +1,248 @@
 'use client';
 
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
-const HERO_FALLBACK =
-  'https://cdn.shopify.com/s/files/1/0019/0319/8317/files/Stefan_VIZU.jpg?v=1758272978';
-
-const LINE_BLURB: Record<string, { headline: string; sub: string }> = {
-  VIZU: {
-    headline: 'VIZU',
-    sub: 'Flagship optics. Fit-specific for Riddell SpeedFlex and Schutt F7.',
-  },
-  VISION: {
-    headline: 'VISION',
-    sub: 'Universal fit. Crystal-clear clarity. The everyday workhorse.',
-  },
-  REVO: {
-    headline: 'REVO',
-    sub: 'Revo™ contrast-boosting optics. Panoramic peripheral vision.',
-  },
+type Visor = {
+  id: string;
+  line: string;
+  name: string;
+  note: string;
+  description: string;
+  image: string;
 };
 
-export type HeroState = {
-  step: string;
-  selectedLine: string | null;
-  selectedVisor: { name: string; image: string; note: string } | null;
+const LINE_ACCENT: Record<string, string> = {
+  VIZU: '#ff4a1c',
+  VISION: '#4aa8ff',
+  REVO: '#b24aff',
 };
 
-export default function Hero({ state }: { state: HeroState }) {
-  const showVisor = !!state.selectedVisor;
-
-  let eyebrow = 'Player equipment request';
-  let headline = 'Rise above the ordinary';
-  let sub = 'Pick your Reyrr visor. Drop your name. We’ll take it from there.';
-
-  if (showVisor && state.selectedVisor) {
-    eyebrow = `${state.selectedLine} · ${state.selectedVisor.note}`;
-    headline = state.selectedVisor.name;
-    sub = 'Lock it in below.';
-  } else if (state.selectedLine && LINE_BLURB[state.selectedLine]) {
-    eyebrow = 'Selected line';
-    headline = LINE_BLURB[state.selectedLine].headline;
-    sub = LINE_BLURB[state.selectedLine].sub;
+function deriveSpecs(v: Visor | null) {
+  if (!v) {
+    return {
+      tint: '—',
+      fit: '—',
+      family: '—',
+      accent: '—',
+      tintBar: 0,
+    };
   }
 
+  const note = v.note.toLowerCase();
+  let tint = v.note.split('·')[0]?.trim() || 'Clear';
+  let family = v.line;
+  let accent = v.note.split('·').slice(1).join('·').trim() || '—';
+
+  let fit = 'Universal';
+  if (v.line === 'VIZU') fit = 'SpeedFlex / F7';
+  if (v.line === 'REVO') fit = 'Wraparound';
+
+  let tintBar = 0;
+  if (note.includes('0%')) tintBar = 5;
+  else if (note.includes('20%')) tintBar = 28;
+  else if (note.includes('80%')) tintBar = 82;
+  else if (note.includes('mirror') || note.includes('chrome')) tintBar = 95;
+  else if (note.includes('tint')) tintBar = 65;
+  else tintBar = 40;
+
+  return { tint, fit, family, accent, tintBar };
+}
+
+export default function Hero({
+  step,
+  selectedVisor,
+  totalVisors,
+  onCTA,
+  ctaDisabled,
+}: {
+  step: 1 | 2 | 3;
+  selectedVisor: Visor | null;
+  totalVisors: number;
+  onCTA: () => void;
+  ctaDisabled: boolean;
+}) {
+  const specs = deriveSpecs(selectedVisor);
+  const accent = selectedVisor ? LINE_ACCENT[selectedVisor.line] : '#ff4a1c';
+
   return (
-    <section className={`hero ${showVisor ? 'hero--product' : 'hero--athlete'}`}>
-      {/* Background: athlete photo (line steps) OR soft gradient (visor steps) */}
-      {!showVisor && (
-        <AnimatePresence mode="sync">
-          <motion.div
-            key="athlete"
-            initial={{ opacity: 0, scale: 1.02 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6 }}
-            className="absolute inset-0"
-          >
-            <Image
-              src={HERO_FALLBACK}
-              alt="Reyrr athlete"
-              fill
-              priority
-              sizes="100vw"
-              style={{ objectFit: 'cover', objectPosition: 'center 28%' }}
-            />
-          </motion.div>
-        </AnimatePresence>
-      )}
+    <section className="hero" id="hero">
+      <div className="hero-grain" aria-hidden="true" />
 
-      <div className="hero__overlay" />
-      <div className="hero__spotlight" aria-hidden="true" />
+      <div className="hero-header">
+        <div>
+          <p className="hud" style={{ marginBottom: 14 }}>
+            Team visor intake · Program 04/26
+          </p>
+          <h1 className="hero-title display">
+            LOCK <span className="em">IN</span>.
+          </h1>
+          <p className="hero-sub" style={{ marginTop: 18 }}>
+            One link for the whole roster. Each player picks their finish and
+            confirms their helmet — we batch the order and confirm with your
+            coach.
+          </p>
+        </div>
 
-      <div className="hero__content">
-        {/* Top bar: brand lockup */}
-        <div className="hero__topbar">
-          <div className="flex items-center gap-3">
-            <span className="brand-mark" aria-hidden="true">
-              R
-            </span>
+        <div className="hero-meta">
+          <div className="meta-stat">
+            <div className="k">Finishes</div>
+            <div className="v">{totalVisors}</div>
+          </div>
+          <div className="meta-stat">
+            <div className="k">Lines</div>
+            <div className="v">03</div>
+          </div>
+          <div className="meta-stat">
+            <div className="k">Origin</div>
+            <div className="v">STHLM SWEDEN</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="stage" id="stage">
+        {/* Left: visor preview */}
+        <div
+          className="stage-left"
+          style={{ ['--current-accent' as any]: accent } as React.CSSProperties}
+        >
+          <div className="ticks" aria-hidden="true">
+            <i />
+            <b />
+          </div>
+          <div className="stage-hud">
+            <div className="l">
+              <span className="chip">
+                {selectedVisor ? selectedVisor.line : 'AWAITING INPUT'}
+              </span>
+              <span>FILE · RYR-{(selectedVisor?.id ?? 'XXXXXX').slice(-6).toUpperCase()}</span>
+            </div>
+            <div className="r">
+              <span>CAM 01</span>
+              <span>· FRAME {selectedVisor ? '0042' : '----'}</span>
+            </div>
+          </div>
+
+          <div className="visor-wrap">
+            <AnimatePresence mode="wait">
+              {selectedVisor ? (
+                <motion.div
+                  key={selectedVisor.id}
+                  initial={{ opacity: 0, scale: 0.94, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.96, y: -6 }}
+                  transition={{ duration: 0.45, ease: [0.2, 0.8, 0.2, 1] }}
+                  style={{
+                    position: 'absolute',
+                    inset: '12% 10%',
+                  }}
+                >
+                  <Image
+                    src={selectedVisor.image}
+                    alt={selectedVisor.name}
+                    fill
+                    priority
+                    sizes="(max-width: 960px) 80vw, 600px"
+                    style={{ objectFit: 'contain' }}
+                  />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="placeholder"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="hud"
+                  style={{ textAlign: 'center', maxWidth: 260 }}
+                >
+                  Select a visor below — the preview locks in here.
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <div className="scanline" aria-hidden="true" />
+
+          <div className="stage-hud-bottom">
             <div>
-              <div className="font-display text-sm tracking-[0.18em] uppercase">
-                Reyrr Athletics
-              </div>
-              <div className="text-[11px] text-white/45 tracking-[0.22em] uppercase">
-                Visor request
-              </div>
+              <div className="sk">Tint</div>
+              <div className="sv">{specs.tint}</div>
+            </div>
+            <div>
+              <div className="sk">Fit</div>
+              <div className="sv">{specs.fit}</div>
+            </div>
+            <div>
+              <div className="sk">Family</div>
+              <div className="sv">{specs.family}</div>
+            </div>
+            <div>
+              <div className="sk">Accent</div>
+              <div className="sv">{specs.accent}</div>
             </div>
           </div>
         </div>
 
-        {/* Compositional body: copy left, visor on right when picked */}
-        <div className="hero__body">
-          <div className="hero__copy">
-            <motion.p
-              key={`eyebrow-${eyebrow}`}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="eyebrow mb-3"
-            >
-              {eyebrow}
-            </motion.p>
-            <motion.h1
-              key={`headline-${headline}`}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="hero__headline"
-            >
-              {headline}
-            </motion.h1>
-            <motion.p
-              key={`sub-${sub}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-              className="hero__sub"
-            >
-              {sub}
-            </motion.p>
+        {/* Right: detail card + CTA */}
+        <div className="stage-right">
+          <div
+            className="detail-card"
+            style={{ ['--current-accent' as any]: accent } as React.CSSProperties}
+          >
+            <div className="detail-line">
+              {selectedVisor ? `${selectedVisor.line} Line` : 'No selection'}
+            </div>
+            <h2 className="detail-name">
+              {selectedVisor ? selectedVisor.name : 'Pick a visor'}
+            </h2>
+            <p className="detail-desc">
+              {selectedVisor
+                ? selectedVisor.description
+                : 'Scroll down to browse all finishes across VIZU, VISION and REVO.'}
+            </p>
+
+            <div className="spec-grid" style={{ marginTop: 20 }}>
+              <div className="cell">
+                <div className="k">Tint density</div>
+                <div className="v">{specs.tint}</div>
+                <div className="bar">
+                  <motion.i
+                    initial={false}
+                    animate={{ width: `${specs.tintBar}%` }}
+                    transition={{ duration: 0.5, ease: [0.2, 0.8, 0.2, 1] }}
+                  />
+                </div>
+              </div>
+              <div className="cell">
+                <div className="k">Fit</div>
+                <div className="v">{specs.fit}</div>
+              </div>
+              <div className="cell">
+                <div className="k">Family</div>
+                <div className="v">{specs.family}</div>
+              </div>
+              <div className="cell">
+                <div className="k">Accent</div>
+                <div className="v">{specs.accent}</div>
+              </div>
+            </div>
           </div>
 
-          {/* Right side: floating visor when picked (desktop only) */}
-          <AnimatePresence mode="wait">
-            {showVisor && state.selectedVisor && (
-              <motion.div
-                key={state.selectedVisor.image}
-                initial={{ opacity: 0, x: 40, scale: 0.95 }}
-                animate={{ opacity: 1, x: 0, scale: 1 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.45, ease: [0.2, 0.8, 0.2, 1] }}
-                className="hero__product"
-              >
-                <div className="hero__product-glow" aria-hidden="true" />
-                <Image
-                  src={state.selectedVisor.image}
-                  alt={state.selectedVisor.name}
-                  fill
-                  priority
-                  sizes="(max-width: 900px) 80vw, 600px"
-                  style={{ objectFit: 'contain' }}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <button
+            type="button"
+            className="cta"
+            onClick={onCTA}
+            disabled={ctaDisabled}
+          >
+            <span>
+              {step === 1
+                ? selectedVisor
+                  ? 'Continue — Identify'
+                  : 'Pick a visor first'
+                : 'Continue'}
+            </span>
+            <span className="arrow">→</span>
+          </button>
         </div>
       </div>
     </section>

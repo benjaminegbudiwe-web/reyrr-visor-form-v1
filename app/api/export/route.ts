@@ -24,17 +24,29 @@ export async function GET(req: NextRequest) {
     const submittedAt = r.submitted_at ? new Date(r.submitted_at) : new Date();
     return {
       'Submitted At': formatDate(submittedAt),
+      Team: r.team_name ?? '',
+      '#': r.jersey_number ?? '',
       Name: r.name,
+      Helmet: r.helmet_model ?? '',
       Line: r.line ?? '',
       Visor: VISOR_NAMES[r.visor] ?? r.visor,
+      Email: r.contact_email ?? '',
     };
   });
 
-  const worksheet = XLSX.utils.json_to_sheet(data, {
-    header: ['Submitted At', 'Name', 'Line', 'Visor'],
-  });
+  const header = ['Submitted At', 'Team', '#', 'Name', 'Helmet', 'Line', 'Visor', 'Email'];
+  const worksheet = XLSX.utils.json_to_sheet(data, { header });
 
-  worksheet['!cols'] = [{ wch: 20 }, { wch: 28 }, { wch: 10 }, { wch: 30 }];
+  worksheet['!cols'] = [
+    { wch: 20 }, // Submitted At
+    { wch: 24 }, // Team
+    { wch: 6 },  // #
+    { wch: 24 }, // Name
+    { wch: 14 }, // Helmet
+    { wch: 10 }, // Line
+    { wch: 30 }, // Visor
+    { wch: 28 }, // Email
+  ];
 
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, 'Visor Requests');

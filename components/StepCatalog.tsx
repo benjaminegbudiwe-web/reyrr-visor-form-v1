@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 type Visor = {
   id: string;
@@ -12,150 +12,125 @@ type Visor = {
   description: string;
   image: string;
   price: string;
+  soldOut?: boolean;
 };
 
-const LINE_META: Record<
-  string,
-  { eyebrow: string; blurb: string }
-> = {
-  VIZU: {
-    eyebrow: 'Flagship line',
-    blurb: 'Fit-specific for Riddell SpeedFlex and Schutt F7.',
-  },
-  VISION: {
-    eyebrow: 'Universal line',
-    blurb: 'Broad helmet compatibility. The everyday workhorse.',
-  },
-  REVO: {
-    eyebrow: 'Revo™ optics',
-    blurb: 'Contrast-boosting lenses with panoramic peripheral view.',
-  },
+const LINE_BLURB: Record<string, string> = {
+  VIZU: 'Flagship line · fit-specific for Riddell SpeedFlex + Schutt F7',
+  VISION: 'Universal line · broad helmet compatibility',
+  REVO: 'Revo™ optics · panoramic peripheral clarity',
 };
 
 export default function StepCatalog({
   visors,
   lines,
+  selectedId,
   onPick,
 }: {
   visors: Visor[];
   lines: string[];
+  selectedId: string | null;
   onPick: (visor: Visor) => void;
 }) {
   const [activeLine, setActiveLine] = useState<string>(lines[0]);
-  const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
-  // Track which section is in view → update active chip
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        if (visible[0]) {
-          const line = visible[0].target.getAttribute('data-line-section');
-          if (line) setActiveLine(line);
-        }
-      },
-      { rootMargin: '-30% 0px -55% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] }
-    );
+  const counts = useMemo(() => {
+    const out: Record<string, number> = {};
+    for (const l of lines) out[l] = visors.filter((v) => v.line === l).length;
+    return out;
+  }, [visors, lines]);
 
-    Object.values(sectionRefs.current).forEach((el) => {
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
-  }, [lines]);
-
-  const handleChipClick = (line: string) => {
-    setActiveLine(line);
-    const el = sectionRefs.current[line];
-    if (el) {
-      const y = el.getBoundingClientRect().top + window.scrollY - 120;
-      window.scrollTo({ top: y, behavior: 'smooth' });
-    }
-  };
-
-  const grouped = lines.map((line) => ({
-    line,
-    visors: visors.filter((v) => v.line === line),
-  }));
+  const shown = visors.filter((v) => v.line === activeLine);
 
   return (
-    <div>
-      <div className="step-heading">
-        <p className="eyebrow">Step 1 of 2</p>
-        <h3>Pick your visor</h3>
-        <p>
-          Browse all {visors.length} finishes across VIZU, VISION, and REVO —
-          tap any card to lock it in.
-        </p>
-      </div>
-
-      {/* Sticky line-jump nav */}
-      <div className="catalog-nav">
-        <div className="chip-set">
-          {lines.map((line) => (
-            <button
-              key={line}
-              type="button"
-              className={`chip ${activeLine === line ? 'is-active' : ''}`}
-              onClick={() => handleChipClick(line)}
-            >
-              {line}
-              <span className="chip__count">
-                {grouped.find((g) => g.line === line)?.visors.length ?? 0}
-              </span>
-            </button>
-          ))}
+    <section className="picker">
+      <div className="picker-head">
+        <div>
+          <p className="hud" style={{ marginBottom: 12 }}>
+            Step 01 · Pick your finish
+          </p>
+          <h2>
+            {visors.length} finishes.<br />
+            Three lines.
+          </h2>
+          <p className="sub">
+            Tap any card to lock it in. Your selection updates the preview up
+            top in real time.
+          </p>
         </div>
       </div>
 
-      {grouped.map(({ line, visors: lineVisors }) => (
-        <section
-          key={line}
-          data-line-section={line}
-          ref={(el) => {
-            sectionRefs.current[line] = el;
-          }}
-          className="line-section"
-        >
-          <div className="line-section__header" data-line={line}>
-            <p className="eyebrow">{LINE_META[line]?.eyebrow}</p>
-            <h4 className="font-display">
-              {line}
-              <span className="line-section__count">
-                {lineVisors.length} finish{lineVisors.length === 1 ? '' : 'es'}
-              </span>
-            </h4>
-            <p className="line-section__blurb">{LINE_META[line]?.blurb}</p>
-          </div>
+      <div className="tabs" role="tablist" aria-label="Visor line">
+        {lines.map((l, i) => (
+          <button
+            key={l}
+            type="button"
+            role="tab"
+            aria-selected={activeLine === l}
+            className={`tab ${activeLine === l ? 'active' : ''}`}
+            onClick={() => setActiveLine(l)}
+          >
+            <span className="num">0{i + 1}</span>
+            <span>
+              {l}
+              <span className="blurb">{LINE_BLURB[l]}</span>
+            </span>
+            <span className="cnt">{counts[l] ?? 0}</span>
+          </button>
+        ))}
+      </div>
 
-          <div className="visor-grid">
-            {lineVisors.map((v) => (
-              <button
-                key={v.id}
-                type="button"
-                data-line={v.line}
-                className="visor-card"
-                onClick={() => onPick(v)}
-              >
-                <div className="visor-card__img">
+      <div className="grid">
+        {shown.map((v, i) => {
+          const isSoldOut = !!v.soldOut;
+          return (
+            <button
+              key={v.id}
+              type="button"
+              className={`card ${selectedId === v.id ? 'selected' : ''} ${
+                isSoldOut ? 'sold-out' : ''
+              }`}
+              onClick={() => !isSoldOut && onPick(v)}
+              disabled={isSoldOut}
+              aria-disabled={isSoldOut}
+            >
+              <div className="swatch">
+                <div className="g">
                   <Image
                     src={v.image}
                     alt={v.name}
                     fill
-                    sizes="(max-width: 720px) 50vw, 220px"
+                    sizes="(max-width: 720px) 50vw, 240px"
                     style={{ objectFit: 'contain' }}
                   />
                 </div>
-                <span className="visor-card__line">{v.line}</span>
-                <strong>{v.name.replace(`${v.line} `, '')}</strong>
-                <p>{v.note}</p>
-              </button>
-            ))}
-          </div>
-        </section>
-      ))}
-    </div>
+                <div className="glint" aria-hidden="true" />
+                <span className="idx">
+                  {String(i + 1).padStart(2, '0')} / {String(shown.length).padStart(2, '0')}
+                </span>
+                {isSoldOut && (
+                  <svg
+                    className="card-x"
+                    viewBox="0 0 100 100"
+                    aria-hidden="true"
+                    preserveAspectRatio="none"
+                  >
+                    <line x1="4" y1="4" x2="96" y2="96" />
+                    <line x1="96" y1="4" x2="4" y2="96" />
+                  </svg>
+                )}
+              </div>
+              <div className="card-body">
+                <div className="card-line">{v.line}</div>
+                <div className="card-name">{v.name.replace(`${v.line} `, '')}</div>
+                <div className="card-desc">
+                  {isSoldOut ? 'Unavailable' : v.note}
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </section>
   );
 }

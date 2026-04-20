@@ -17,7 +17,8 @@
     "note": "Adaptive Tint · Day-to-Night",
     "description": "Adaptive lens option for changing light through the day.",
     "image": "https://cdn.shopify.com/s/files/1/0019/0319/8317/files/IMG_3061-Transparent_8dbebbef-f4fd-4e35-84e5-f6e7438ea289.png?v=1755166494",
-    "price": "699"
+    "price": "699",
+    "soldOut": true
   },
   {
     "id": "vizu-nordic-sky",
