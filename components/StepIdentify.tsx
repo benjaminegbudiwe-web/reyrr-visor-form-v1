@@ -79,12 +79,12 @@ export default function StepIdentify({
 
         <div className="step2-stats">
           <div className="detail-card">
-            <div className="detail-line">Team</div>
-            <div className="detail-name">{fields.teamName || '—'}</div>
+            <div className="detail-line">Visor</div>
+            <div className="detail-name">{visor.name}</div>
           </div>
           <div className="detail-card">
-            <div className="detail-line">Helmet</div>
-            <div className="detail-name">{fields.helmetModel || '—'}</div>
+            <div className="detail-line">Name</div>
+            <div className="detail-name">{fields.playerName || '—'}</div>
           </div>
         </div>
       </div>
