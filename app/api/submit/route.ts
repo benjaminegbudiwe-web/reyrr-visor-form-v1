@@ -47,7 +47,10 @@ export async function POST(req: NextRequest) {
     if (!VALID_LINES.has(line)) {
       return NextResponse.json({ error: 'Invalid line' }, { status: 400 });
     }
-    if (!team_name || team_name.length > 80) {
+    // team_name + jersey_number are no longer collected in the form, but we
+    // keep them on the payload as optional pass-throughs so future URL-param
+    // or per-team links can still populate them without a schema migration.
+    if (team_name && team_name.length > 80) {
       return NextResponse.json({ error: 'Invalid team name' }, { status: 400 });
     }
     if (jersey_number_raw.length > 10) {
@@ -70,7 +73,7 @@ export async function POST(req: NextRequest) {
       name,
       line,
       visor,
-      team_name,
+      team_name: team_name || '',
       jersey_number: jersey_number_raw || null,
       helmet_model,
       contact_email: contact_email_raw || null,

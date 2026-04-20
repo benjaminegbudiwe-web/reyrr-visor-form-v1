@@ -12,9 +12,7 @@ type Visor = {
 };
 
 export type IdentifyFields = {
-  teamName: string;
   playerName: string;
-  jerseyNumber: string;
   helmetModel: string;
 };
 
@@ -59,7 +57,6 @@ export default function StepIdentify({
     !VIZU_COMPATIBLE.has(fields.helmetModel);
 
   const canSubmit =
-    fields.teamName.trim().length > 0 &&
     fields.playerName.trim().length > 0 &&
     fields.helmetModel.length > 0 &&
     !submitting;
@@ -112,27 +109,11 @@ export default function StepIdentify({
 
         <div className="fields-stack">
           <div className="field">
-            <label htmlFor="team-name" className="field-label">
-              Team name
-            </label>
-            <input
-              ref={firstRef}
-              id="team-name"
-              className="field-input"
-              type="text"
-              value={fields.teamName}
-              onChange={(e) => onChange({ teamName: e.target.value })}
-              placeholder="e.g. Nordic Storm"
-              maxLength={80}
-              autoComplete="organization"
-            />
-          </div>
-
-          <div className="field">
             <label htmlFor="player-name" className="field-label">
               Player name
             </label>
             <input
+              ref={firstRef}
               id="player-name"
               className="field-input"
               type="text"
@@ -144,39 +125,22 @@ export default function StepIdentify({
             />
           </div>
 
-          <div className="field field-row-2">
-            <div>
-              <label htmlFor="jersey-number" className="field-label">
-                Jersey # <span style={{ opacity: 0.5 }}>(optional)</span>
-              </label>
-              <input
-                id="jersey-number"
-                className="field-input"
-                type="text"
-                value={fields.jerseyNumber}
-                onChange={(e) => onChange({ jerseyNumber: e.target.value })}
-                placeholder="73"
-                maxLength={10}
-                inputMode="text"
-              />
-            </div>
-            <div>
-              <label htmlFor="helmet-model" className="field-label">
-                Helmet model
-              </label>
-              <select
-                id="helmet-model"
-                className="field-select"
-                value={fields.helmetModel}
-                onChange={(e) => onChange({ helmetModel: e.target.value })}
-              >
-                {HELMET_OPTIONS.map((o) => (
-                  <option key={o.value} value={o.value}>
-                    {o.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div className="field">
+            <label htmlFor="helmet-model" className="field-label">
+              Helmet model
+            </label>
+            <select
+              id="helmet-model"
+              className="field-select"
+              value={fields.helmetModel}
+              onChange={(e) => onChange({ helmetModel: e.target.value })}
+            >
+              {HELMET_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
           </div>
 
           {showVizuWarning && (

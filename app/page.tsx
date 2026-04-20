@@ -21,9 +21,7 @@ type Step = 'catalog' | 'identify' | 'done';
 const LINE_ORDER = ['VIZU', 'VISION', 'REVO'];
 
 const EMPTY_FIELDS: IdentifyFields = {
-  teamName: '',
   playerName: '',
-  jerseyNumber: '',
   helmetModel: '',
 };
 
@@ -87,8 +85,6 @@ export default function Home() {
           name: fields.playerName.trim(),
           visor: selectedVisor.id,
           line: selectedVisor.line,
-          team_name: fields.teamName.trim(),
-          jersey_number: fields.jerseyNumber.trim(),
           helmet_model: fields.helmetModel,
         }),
       });
@@ -179,7 +175,6 @@ export default function Home() {
             <StepDone
               requestId={requestId}
               playerName={fields.playerName}
-              teamName={fields.teamName}
               visor={selectedVisor}
               onReset={handleReset}
             />
